@@ -1,7 +1,7 @@
-require './weathers'
-require 'json'
 
-
+module Sinatra
+    module Routing
+      module Places
 class Places
 
   attr_reader :lat, :lon, :address, :phone_number, :name, :rating, :placeid, :price_level, :open_now, :periods, :radius, :weekday_text
@@ -106,7 +106,17 @@ class Places
   end
 end
 
-get '/places/:error' do
+def self.registered(app)
+
+app.get '/' do
+   File.read("public/app/index.html")
+end
+
+app.get "/.well-known/acme-challenge/:id" do
+  "CqD-ZW-Uqkj3u0HwalQnMURLuymOXJXPLpGCqreyl3I.-UoHTrge-mXXavQ8aYtOhEYdvB2ZXHoqKXfHqlwppnc"
+end
+
+app.get '/places/:error' do
 
   @error = params[:error]
 
@@ -114,7 +124,7 @@ get '/places/:error' do
 
 end
 
-get '/places' do
+app.get '/places' do
   lat = params[:lat]
   lon = params[:lon]
 
@@ -151,7 +161,7 @@ get '/places' do
   h.to_json
 end
 
-post '/places' do
+app.post '/places' do
 
   @json = JSON.parse(request.body.read)
   puts "IN PLACES"
@@ -202,4 +212,13 @@ post '/places' do
   @place.instance_variables.each { |var| h[var.to_s.delete("@").to_sym] = @place.instance_variable_get(var)}
 
   h.to_json
+end
+
+
+
+
+end
+
+    end
+    end
 end

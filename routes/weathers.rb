@@ -1,3 +1,6 @@
+module Sinatra
+    module Routing
+      module Weathers
 class Weathers
 
   attr_reader :lat, :lon, :description, :temperature
@@ -38,14 +41,6 @@ class Weathers
 
   end
 end
-
-# #get '/weather' do
-#   @lat = params[:lat]
-#   @lon = params[:lon]
-#
-#   weather = Weathers.new(@lat, @lon)
-#   @weatherStatus = weather.weatherStatus
-#
-#   erb :weather
-#
-# end
+    end
+    end
+end
