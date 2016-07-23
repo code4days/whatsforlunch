@@ -1,38 +1,33 @@
 require 'sinatra'
 #require 'sinatra/reloader' if development?
-#require 'json'
 require 'httparty'
-require './places'
-require './maps'
-require './weathers'
 require 'pp'
-# require './db'
-
-configure do
-  set :root, File.dirname(__FILE__)
-  set :public_folder, "public/app"
-end
-
-get '/' do
-
-File.read("public/app/index.html")
-
-end
-
-get "/.well-known/acme-challenge/:id" do
-"CqD-ZW-Uqkj3u0HwalQnMURLuymOXJXPLpGCqreyl3I.-UoHTrge-mXXavQ8aYtOhEYdvB2ZXHoqKXfHqlwppnc"
-end
+require 'json'
 
 
+require_relative 'routes/maps'
+require_relative 'routes/places'
+require_relative 'routes/weathers'
 
-get '/environment' do
-  if development?
-    "development"
-  elsif production?
-    "production"
-  elsif test?
-    "test"
-  else
-    "I don't know where the hell you are!"
-  end
+class BaseApp < Sinatra::Base
+        configure do
+            set :sessions, true
+            use Rack::Session::Cookie, :key => 'rack.session',
+                                    :domain => 'localhost',
+                                    :path => '/',
+                                    :expire_after => 2592000,
+                                    :secret => 'M3ga8yt3 5tuff',
+                                    :old_secret => 'M3ga8yt3 5tuff'
+            set :views, 'views'
+            set :public_folder, 'public/app'
+            set :root, File.dirname(__FILE__)
+        end
+
+    # Print out what you are running
+    puts "You are currently running: " + ENV['RACK_ENV']
+  
+  register Sinatra::Routing::Places
+  register Sinatra::Routing::Maps
+  register Sinatra::Routing::Weathers
+
 end
